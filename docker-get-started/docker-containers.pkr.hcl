@@ -1,3 +1,7 @@
+#####
+# Settings
+#####
+
 packer {
   required_plugins {
     docker = {
@@ -9,6 +13,10 @@ packer {
   required_version = "~> 1.8.0"
 }
 
+#####
+# Variables
+#####
+
 variable "ubuntu_image" {
   type    = string
   default = "ubuntu:22.04"
@@ -18,6 +26,10 @@ variable "centos_image" {
   type    = string
   default = "centos:7"
 }
+
+#####
+# Sources
+#####
 
 source "docker" "ubuntu" {
   image  = var.ubuntu_image
@@ -30,6 +42,10 @@ source "docker" "centos" {
   # The path where the final container will be exported as a tar file.
   export_path = "./out/centos.tar"
 }
+
+#####
+# Builds
+#####
 
 build {
   name = "docker-get-started"
