@@ -50,7 +50,8 @@ source "docker" "centos" {
 build {
   name = "docker-get-started"
   sources = [
-    "source.docker.ubuntu"
+    "source.docker.ubuntu",
+    "source.docker.centos"
   ]
 
   provisioner "shell" {
@@ -75,11 +76,4 @@ build {
   provisioner "shell" {
     inline = ["echo Running '${var.ubuntu_image}' Docker image."]
   }
-}
-
-build {
-  name = "docker-get-started"
-  sources = [
-    "source.docker.centos"
-  ]
 }
