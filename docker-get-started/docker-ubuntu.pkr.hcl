@@ -26,6 +26,25 @@ build {
   sources = [
     "source.docker.ubuntu"
   ]
+
+  provisioner "shell" {
+    environment_vars = [
+      "FOO=hello world",
+    ]
+    inline = [
+      "echo Adding file to Docker Container",
+      "echo \"FOO is $FOO\" > example.txt"
+    ]
+  }
+
+  provisioner "shell" {
+    inline = [
+      "echo Printing all default env vars",
+      "echo \"PACKER_BUILD_NAME is $PACKER_BUILD_NAME\" >> example.txt",
+      "echo \"PACKER_BUILDER_TYPE is $PACKER_BUILDER_TYPE\" >> example.txt",
+      "echo \"PACKER_HTTP_ADDR is $PACKER_HTTP_ADDR\" >> example.txt"
+    ]
+  }
 }
 
 build {
