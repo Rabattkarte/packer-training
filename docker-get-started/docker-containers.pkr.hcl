@@ -17,14 +17,14 @@ packer {
 # Variables
 #####
 
-variable "ubuntu_image" {
+variable "ubuntu_image_tag" {
   type    = string
-  default = "ubuntu:22.04"
+  default = "22.04"
 }
 
-variable "centos_image" {
+variable "centos_image_tag" {
   type    = string
-  default = "centos:7"
+  default = "7"
 }
 
 #####
@@ -32,15 +32,15 @@ variable "centos_image" {
 #####
 
 source "docker" "ubuntu" {
-  image  = var.ubuntu_image
+  image  = "ubuntu:${var.ubuntu_image_tag}"
   commit = true
 }
 
 source "docker" "centos" {
-  image = var.centos_image
-  # commit = true
+  image = "centos:${var.centos_image_tag}"
+  commit = true
   # The path where the final container will be exported as a tar file.
-  export_path = "./out/centos.tar"
+  # export_path = "./out/centos.tar"
 }
 
 #####
@@ -74,6 +74,24 @@ build {
   }
 
   provisioner "shell" {
-    inline = ["echo Running '${var.ubuntu_image}' Docker image."]
+    only   = ["docker.ubuntu"]
+    inline = ["echo Running 'ubuntu:${var.ubuntu_image_tag}' Docker image."]
+  }
+
+  provisioner "shell" {
+    only   = ["docker.centos"]
+    inline = ["echo Running 'docker:${var.centos_image_tag}' Docker image."]
+  }
+
+  post-processor "docker-tag" {
+    repository = "packer-docker-get-started-ubuntu"
+    tags       = [var.ubuntu_image_tag, "packer-rocks"]
+    only       = ["docker.ubuntu"]
+  }
+
+  post-processor "docker-tag" {
+    repository = "packer-docker-get-started-centos"
+    tags       = [var.centos_image_tag, "packer-rocks"]
+    only       = ["docker.centos"]
   }
 }
